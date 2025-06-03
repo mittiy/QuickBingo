@@ -6,15 +6,16 @@ import {
   mantineHtmlProps,
 } from "@mantine/core";
 import { theme } from "../theme";
+import Link from "next/link";
 
 export const metadata = {
-  title: "Mantine Next.js template",
-  description: "I am using Mantine with Next.js!",
+  title: "Quick Bingo",
+  description: "Quick Bingoは、手軽にビンゴゲームを楽しめるWebアプリです。友達や家族と一緒に、リアルタイムでビンゴを体験できます。",
 };
 
 export default function RootLayout({ children }: { children: any }) {
   return (
-    <html lang="en" {...mantineHtmlProps}>
+    <html lang="jp" {...mantineHtmlProps}>
       <head>
         <ColorSchemeScript />
         <link rel="shortcut icon" href="/favicon.svg" />
@@ -24,7 +25,12 @@ export default function RootLayout({ children }: { children: any }) {
         />
       </head>
       <body>
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+        <MantineProvider theme={theme}>
+          <nav style={{ padding: "1rem" }}>
+            <Link href="/kuji">ビンゴくじページへ</Link>
+          </nav>
+          {children}
+        </MantineProvider>
       </body>
     </html>
   );
