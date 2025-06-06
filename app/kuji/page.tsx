@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Card, Group, Stack, Title, Text, Divider } from "@mantine/core";
+import { Button, Card, Group, Stack, Title, Text, Divider, Modal } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 
 // ポケモン151匹の名前リスト
 const pokemon151 = [
@@ -45,11 +46,21 @@ export default function KujiPage() {
   const [kujiList, setKujiList] = useState<string[]>([]);
   const [drawnList, setDrawnList] = useState<string[]>([]);
   const [lastDraw, setLastDraw] = useState<string | null>(null);
+  const [opened, { open, close }] = useDisclosure(false);
 
   const handleCreateKuji = () => {
     setKujiList(shuffle(pokemon151));
     setDrawnList([]);
     setLastDraw(null);
+    close();
+  };
+
+  const handleCreateClick = () => {
+    if (drawnList.length > 0 || kujiList.length > 0) {
+      open();
+    } else {
+      handleCreateKuji();
+    }
   };
 
   const handleDraw = () => {
@@ -61,9 +72,16 @@ export default function KujiPage() {
 
   return (
     <Stack align="center" gap="md" p="md">
+      <Modal opened={opened} onClose={close} title="くじをリセットしますか？" centered>
+        <Text mb="md">すでにくじが進行中です。新しく作成するとリセットされます。よろしいですか？</Text>
+        <Group justify="flex-end">
+          <Button variant="default" onClick={close}>キャンセル</Button>
+          <Button color="red" onClick={handleCreateKuji}>リセットして作成</Button>
+        </Group>
+      </Modal>
       <Title order={1} ta="center">ポケモン151くじ</Title>
       <Group>
-        <Button onClick={handleCreateKuji} color="teal" variant="filled">
+        <Button onClick={handleCreateClick} color="teal" variant="filled">
           くじを作成
         </Button>
         <Button onClick={handleDraw} disabled={kujiList.length === 0} color="blue">
